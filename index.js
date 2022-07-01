@@ -42,6 +42,21 @@ async function run() {
             res.send(result)
         }
         )
+
+        app.put('/completed/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: true };
+            const updatedDoc = {
+                $set: {
+                    status: 'completed'
+                }
+            };
+            const result = await taskCollection.updateOne(filter, updatedDoc, options)
+            res.send(result)
+        }
+        )
+
         app.post('/task', async (req, res) => {
             const newTask = req.body;
             console.log("addning new info", newTask);
@@ -55,6 +70,7 @@ async function run() {
 }
 run().catch(console.dir);
 
+app.use(cors({ origin: "" }))
 app.get('/', (req, res) => {
     res.send('To Do server is running');
 })
