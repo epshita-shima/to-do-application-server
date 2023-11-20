@@ -7,7 +7,7 @@ const port = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-const uri = "mongodb+srv://db_todo:214wx4pEoSa35S8i@cluster0.cnsel.mongodb.net/?retryWrites=true&w=majority";
+const uri = "mongodb+srv://db_todo:NWSfmeG4paEnVH8X@cluster0.cnsel.mongodb.net/?retryWrites=true&w=majority"
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
 async function run() {
@@ -56,6 +56,14 @@ async function run() {
             res.send(result)
         }
         )
+        app.delete('/task/:id', async (req, res) => {
+            const id = req.params.id;
+            console.log(id)
+            const query = { _id: ObjectId(id) }
+            const result = await taskCollection.deleteOne(query);
+            res.send(result);
+
+        })
 
         app.post('/task', async (req, res) => {
             const newTask = req.body;
@@ -63,6 +71,8 @@ async function run() {
             const result = await taskCollection.insertOne(newTask);
             res.send(result);
         })
+
+        
     }
     finally {
 
